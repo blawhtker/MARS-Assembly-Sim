@@ -1,5 +1,3 @@
-# Blake Whitaker
-# Project 2 Part B
 # Program to find number of occurrences of user input string in sample statement
 
 .data
