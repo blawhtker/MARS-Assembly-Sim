@@ -1,6 +1,3 @@
-# Blake Whitaker
-# Project 1 part A
-
 .data
 prompt: .asciiz "Enter 4 integers for A, B, C, D respectively:\n"
 newLine: .asciiz "\n"
