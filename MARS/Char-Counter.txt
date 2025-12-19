@@ -1,4 +1,3 @@
-# Blake Whitaker - 3/21/22
 .data
 string:.asciiz "coming in winners of three in a row, including back-to-back triumphs on the road, the knights returned to orlando hungry to finish out the regular season home schedule on a high note."
 spacer:.asciiz "----------------"
