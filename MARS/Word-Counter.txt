@@ -1,5 +1,3 @@
-# Program to find number of occurrences of user input string in sample statement
-
 .data
 sampleStatement: .asciiz "UCF, its athletic program, and the university's alumni and sports fans are sometimes jointly referred to as the UCF Nation, and are represented by the mascot Knightro. The Knight was chosen as the university mascot in 1970 by student election. The Knights of Pegasus was a submission put forth by students, staff, and faculty, who wished to replace UCF's original mascot, the Citronaut, which was a mix between an orange and an astronaut. The Knights were also chosen over Vincent the Vulture, which was a popular uuofficial mascot among students at the time. In 1994, Knightro debuted as the Knights official athletic mascot."
 fWord: .space 10         
