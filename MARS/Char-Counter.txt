@@ -1,0 +1,254 @@
+# Blake Whitaker - 3/21/22
+.data
+string:.asciiz "coming in winners of three in a row, including back-to-back triumphs on the road, the knights returned to orlando hungry to finish out the regular season home schedule on a high note."
+spacer:.asciiz "----------------"
+newline:.asciiz "\n"
+
+.text
+main:
+# Placeholder for number of appearances
+li $s0, 0	# K
+li $s1, 0	# N
+li $s2, 0	# I
+li $s3, 0	# G
+li $s4, 0	# H
+li $s5, 0	# T
+li $s6, 0	# S
+
+# Load first address of string
+la $t0, string
+
+checkLoop:
+# Load character from string
+lb $t2, 0($t0)
+beqz, $t2, end
+
+beq $t2, 107, counterK
+beq $t2, 110, counterN
+beq $t2, 105, counterI
+beq $t2, 103, counterG
+beq $t2, 104, counterH
+beq $t2, 116, counterT
+beq $t2, 115, counterS
+
+addi $t0, $t0, 1
+
+j checkLoop	
+counterK: add $s0, $s0, 1
+j checkLoop	
+counterN: add $s1, $s1, 1
+j checkLoop	
+counterI: add $s2, $s2, 1
+j checkLoop	
+counterG: add $s3, $s3, 1
+j checkLoop	
+counterH: add $s4, $s4, 1
+j checkLoop	
+counterT: add $s5, $s5, 1
+j checkLoop	
+counterS: add $s6, $s6, 1
+j checkLoop
+
+end:
+# Printing number of times each letter appears
+# K
+li $v0, 11
+li $a0, 'K'
+syscall
+li $v0, 4
+la $a0, spacer
+syscall
+li $v0, 1
+move $a0, $s0
+syscall
+li $v0, 11
+li $a0, '\n'
+syscall
+
+# N
+li $v0, 11
+li $a0, 'N'
+syscall
+li $v0, 4
+la $a0, spacer
+syscall
+li $v0, 1
+move $a0, $s1
+syscall
+li $v0, 11
+li $a0, '\n'
+syscall
+
+# I
+li $v0, 11
+li $a0, 'I'
+syscall
+li $v0, 4
+la $a0, spacer
+syscall
+li $v0, 1
+move $a0, $s2
+syscall
+li $v0, 11
+li $a0, '\n'
+syscall
+
+# G
+li $v0, 11
+li $a0, 'G'
+syscall
+li $v0, 4
+la $a0, spacer
+syscall
+li $v0, 1
+move $a0, $s3
+syscall
+li $v0, 11
+li $a0, '\n'
+syscall
+
+# H
+li $v0, 11
+li $a0, 'H'
+syscall
+li $v0, 4
+la $a0, spacer
+syscall
+li $v0, 1
+move $a0, $s4
+syscall
+li $v0, 11
+li $a0, '\n'
+syscall
+
+# T
+li $v0, 11
+li $a0, 'T'
+syscall
+li $v0, 4
+la $a0, spacer
+syscall
+li $v0, 1
+move $a0, $s5
+syscall
+li $v0, 11
+li $a0, '\n'
+syscall
+
+# S
+li $v0, 11
+li $a0, 'S'
+syscall
+li $v0, 4
+la $a0, spacer
+syscall
+li $v0, 1
+move $a0, $s6
+syscall
+
+# New lines
+li $v0, 11
+li $a0, '\n'
+syscall
+li $v0, 11
+li $a0, '\n'
+syscall
+
+# Printing number of #'s that corresponds to number of appearances
+printCount:
+li $t0, 0
+move $s0, $a0
+loop:
+li $v0, 11
+li $a0, '#'
+syscall
+add $t0, $t0, 1
+blt $t0, $s0, loop
+jr $ra
+
+li $v0, 11
+li $a0, 'K'
+syscall
+li $v0, 11
+li $a0, ':'
+syscall
+move $a0, $s0
+jal printCount
+li $v0, 11
+li $a0, '\n'
+syscall
+
+li $v0, 11
+li $a0, 'N'
+syscall
+li $v0, 11
+li $a0, ':'
+syscall
+move $a0, $s1
+jal printCount
+li $v0, 11
+li $a0, '\n'
+syscall
+
+li $v0, 11
+li $a0, 'I'
+syscall
+li $v0, 11
+li $a0, ':'
+syscall
+move $a0, $s2
+jal printCount
+li $v0, 11
+li $a0, '\n'
+syscall
+
+li $v0, 11
+li $a0, 'G'
+syscall
+li $v0, 11
+li $a0, ':'
+syscall
+move $a0, $s3
+jal printCount
+li $v0, 11
+li $a0, '\n'
+syscall
+
+li $v0, 11
+li $a0, 'H'
+syscall
+li $v0, 11
+li $a0, ':'
+syscall
+move $a0, $s4
+jal printCount
+li $v0, 11
+li $a0, '\n'
+syscall
+
+li $v0, 11
+li $a0, 'T'
+syscall
+li $v0, 11
+li $a0, ':'
+syscall
+move $a0, $s5
+jal printCount
+li $v0, 11
+li $a0, '\n'
+syscall
+
+li $v0, 11
+li $a0, 'S'
+syscall
+li $v0, 11
+li $a0, ':'
+syscall
+move $a0, $s6
+jal printCount
+li $v0, 11
+li $a0, '\n'
+syscall
+
+li $v0, 10
+syscall

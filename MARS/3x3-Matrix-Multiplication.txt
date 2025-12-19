@@ -1,0 +1,118 @@
+## Blake Whitaker
+## Project 3 Part A
+.data
+p1: .asciiz "Please enter the 1st integer: "
+p2: .asciiz "Please enter the 2nd integer: "
+
+labelP1IsLess: .asciiz "first number is less than second number"
+labelP2IsLess: .asciiz "second number is less than first number"
+.text
+main:
+
+li $v0, 4
+la $a0, p1
+syscall
+
+li $v0, 5
+syscall           //read the input
+
+move $8, $v0
+
+li $v0, 4
+la $a0, p2
+syscall
+
+li $v0, 5
+syscall
+
+move $9, $v0
+
+blt $8, $9, firstIsLessThanLabel
+blt $9, $8, secondIsLessThanLabel
+
+b exitLabel
+
+firstIsLessThanLabel:
+li $v0, 4
+la $a0, labelP1IsLess
+syscall
+
+b exitLabel
+
+secondIsLessThanLabel:
+
+li $v0, 4
+la $a0, labelP2IsLess
+syscall
+
+b exitLabel
+
+exitLabel:
+
+li $vo, 10
+syscall
+
+
+////////////////////////////////////////////
+
+
+## Blake Whitaker
+## Project 3 Part B
+
+.data
+
+A: .float 0.11 0.34 1.23 5.34 0.76 0.65 0.34 0.12 0.87 0.56
+B: .float 7.89 6.87 9.89 7.12 6.23 8.76 8.21 7.32 7.32 8.22
+N: .float 10
+
+meanA: .asciiz "\nThe Mean of A ="
+
+meanB: .asciiz "\nThe Mean of B ="
+
+.text
+
+la $a0,N # Load address of input vector size into $a0
+l.s $f2, 0($a0) # Load the input vector size into $f2
+
+la $a0, A # Load the address of vector A into $a0
+
+jal mean # Call mean function, result in $f1
+
+li $v0,4 # Load 4=print_string into $v0
+
+la $a0, meanA # Load address of first string into $a0
+syscall # Output the string via syscall
+
+li $v0,2 # Load 2 into $v0=print single precision float
+mov.s $f12,$f1 # Copy from $f1 to $f12
+
+syscall # output meanA
+
+mov.s $f1,$f3 # reset $f1
+
+la $a0, B # Load the address of vector B into $a0
+
+jal mean # Call mean function, result in $f1
+
+li $v0,4 # Load 4=print_string into $v0
+la $a0, meanB # Load address of second string into $a0
+syscall # Output the string via syscall
+li $v0,2 # Load 2 into $v0=print single precision float
+mov.s $f12,$f1 # Copy from $f1 to $f12
+syscall # output meanB
+#Exit
+li $v0,10
+syscall
+#mean function
+mean:
+li $t0,0
+loop:
+mul $t2,$t0,4 #get index of i
+add $t2,$t2,$a0
+l.s $f4,($t2) #load value from array
+add.s $f1,$f1,$f4 #add values
+add $t0,$t0,1 #i++
+blt $t0,10,loop
+div.s $f1,$f1,$f2 #divide by numbers
+return:
+jr $ra

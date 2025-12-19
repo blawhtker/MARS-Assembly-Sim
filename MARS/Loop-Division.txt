@@ -1,0 +1,148 @@
+# Blake Whitaker	2/21/2022
+.data
+# User prompt
+f: .asciiz "Enter the first number: "
+g: .asciiz "Enter the second number: "
+
+# Display output formatting
+f_ten: .asciiz "f_ten = "
+g_ten: .asciiz "g_ten = "
+h_quotient: .asciiz "h_quotient = "
+h_remainder: .asciiz "h_remainder = "
+i_mod: .asciiz "i_mod = "
+newLine: .asciiz "\n"
+
+.text
+# Print user prompt for f
+li $v0, 4
+la $a0, f
+syscall
+
+# Get user input for f
+li $v0, 5
+syscall
+
+# Assign the value of f to $s0
+move $s0, $v0
+
+# Print user prompt for g
+li $v0, 4
+la $a0, g
+syscall
+ 
+# Get user input for g
+li $v0, 5
+syscall
+
+# Assign the value of g to $s1
+move $s1, $v0
+
+# Print the string f_ten
+li $v0, 4
+la $a0, f_ten
+syscall 
+
+# Print the original value of f_ten
+li $v0, 1
+move $a0, $s0
+syscall
+
+# Print a new line
+li $v0, 4
+la $a0, newLine
+syscall
+
+# Print the string g_ten
+li $v0, 4
+la $a0, g_ten
+syscall 
+
+# Print the original value of g_ten
+li $v0, 1
+move $a0, $s1
+syscall
+
+# Print a new line
+li $v0, 4
+la $a0, newLine
+syscall
+
+# Find f + g and store in register $s2
+add $s2, $s0, $s1
+
+# Assign the registers $t0 and $t1 with 0 for quotient and remainder.
+li $t0, 0
+li $t1, 0
+
+# Division loop for f / g
+calcDivision:
+blt $s0, 0, next	# If $s0 is less than or equal to zero go to next
+sub $s0, $s0, $s1	# $s0 = f - g
+#move $t1, $s0		# Store value of $s0 in $t0 to get the remainder
+addi $t0, $t0, 1	# Increment the value of $t0 to get the quotient
+j calcDivision
+
+next:
+beq $t0, 0, printDivision
+addi $t0, $t0, -1	# Decrement the value of $t0 by 1
+add $t1, $s0, $s1	# Add $s0 and $s1
+
+# Prints the computed values of quotient and remainder of f / g
+printDivision:
+li $v0, 4		# Print the string h_quotient
+la $a0, h_quotient
+syscall
+
+# Print the value of $t0
+li $v0, 1
+move $a0, $t0
+syscall
+
+# Print a new line
+li $v0, 4
+la $a0, newLine
+syscall
+
+# Print the string h_remainder
+li $v0, 4
+la $a0, h_remainder
+syscall
+
+# Print the value of $t0 ( h_remainder )
+li $v0, 1
+move $a0, $t1
+syscall
+
+# Assign $t1 to 0 for mod calculation
+li $t1, 0
+
+# Subtraction use to find mod
+calcMod:
+blt $s2, 0, nextMod	# If $s2 value is less than or equal to 0, then go to nextMod
+sub $s2, $s2, $t0	# $s2 = $s2 - $t0
+move $t1, $s2		# Store the value of $s2 in $t1
+j calcMod
+
+nextMod:
+beq $s2, 0, printMod	# If negative then add
+add $t1, $t1, $s2
+
+# Print the value of mod
+printMod:
+li $v0, 4
+la $a0, newLine		# Print a new line
+syscall
+
+# Print the string i_mod
+li $v0, 4
+la $a0, i_mod
+syscall
+
+# Print the value of $t1 ( i_mod )
+li $v0, 1 
+move $a0, $s2
+syscall
+
+# End of program
+li $v0, 10
+syscall

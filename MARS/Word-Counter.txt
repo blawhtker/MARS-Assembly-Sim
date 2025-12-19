@@ -1,0 +1,196 @@
+# Blake Whitaker
+# Project 2 Part B
+# Program to find number of occurrences of user input string in sample statement
+
+.data
+sampleStatement: .asciiz "UCF, its athletic program, and the university's alumni and sports fans are sometimes jointly referred to as the UCF Nation, and are represented by the mascot Knightro. The Knight was chosen as the university mascot in 1970 by student election. The Knights of Pegasus was a submission put forth by students, staff, and faculty, who wished to replace UCF's original mascot, the Citronaut, which was a mix between an orange and an astronaut. The Knights were also chosen over Vincent the Vulture, which was a popular uuofficial mascot among students at the time. In 1994, Knightro debuted as the Knights official athletic mascot."
+fWord: .space 10         
+sWord: .space 10
+newLine: .asciiz "\n"
+fPrompt: .asciiz "Please input first word: "
+sPrompt: .asciiz "Please input second word: "
+colon: .asciiz ":"
+hash: .asciiz "######"
+hash2: .asciiz "###"
+     
+.text
+main:
+la $a0,newLine           	# Print a new line.
+li $v0,4
+syscall
+
+la $a0,fPrompt           	# Prompt the user to enter the first string.
+li $v0,4			# "Please input first word: "
+syscall
+
+li $v0, 8           		# Read user input string for first word.
+la $a0, fWord         
+li $a1, 9         
+syscall
+
+la $a0,sPrompt           	# Prompt the user to enter the second string.     
+li $v0,4			# "Please input second word: "
+syscall
+
+li $v0, 8           		# Read user input for second word.
+la $a0, sWord         
+li $a1, 9         
+syscall
+
+# Analyzing first user input word 
+ 
+li $t4,0            		# Intialize the couter to 0.
+la $t0,sampleStatement       	# Store the sample statement into $t0.
+  
+search1:   
+la $t1,fWord          		# Store the search word into $t1.
+
+loop1:                   	# loop1 finds the number of occurences of user input word in the sample statment.                 
+lb $t2,($t0)           		# Load the starting address(character) of sample statement into $t2
+lb $t3,($t1)           		# Load the starting address of user input word into $t3                 
+
+beq $t3,'\n',counter1
+beqz $t3,counter1       	# If $t3 is 0, exit loop, print output
+beqz $t2,printOutput       	# If $t2 is 0, exit loop, print output
+                 
+move $a0,$t2           		# Convert $t2 to lower, if it is upper case
+jal convert2Lower
+move $t2,$v0           		# Store the return($v0) value into $t2
+
+move $a0,$t3           		# Convert $t3 to lower, if it is upper case
+jal convert2Lower
+move $t3,$v0           		# Store the return($v0) value into $t3
+
+bne $t2,$t3,nextChar       	# If both characters do not match current character in the string, go to next character otherwise, increment both
+addiu $t0,$t0,1            
+addiu $t1,$t1,1
+j loop1               		# Jump to loop start.
+
+nextChar:
+la $t5,fWord
+bne $t5,$t1,search1
+la $t1,fWord           		# Store the user input word into $t1.
+addiu $t0,$t0,1            	# Increment, goto next character.
+j loop1               		# Jump to loop start.
+
+counter1:
+addi $t4,$t4,1           	# Increment the frequency counter by 1
+la $t1,fWord           		# Store user input word into $t1
+j loop1               		# Jump to loop start.
+
+printOutput:
+la $t0,fWord
+
+L1:
+lb $a0,($t0)
+beq $a0,'\n',exL1
+jal convert2Upper
+move $a0,$v0
+li $v0,11
+syscall
+addiu $t0,$t0,1
+j L1
+
+exL1:
+la $a0,colon
+li $v0,4
+syscall
+
+la $a0, hash
+li $v0, 4
+syscall     
+
+move $a0,$t4
+li $v0,1
+syscall               
+   
+la $a0,newLine
+li $v0,4
+syscall
+
+# Analyzing second user input word
+
+li $t4,0            		# Intialize the couter to 0.
+la $t0,sampleStatement          # Store the statement into $t0.
+
+search2:   
+la $t1,sWord           		# Store the search word into $t1.
+
+loop2:                   	# loop2 finds the number of occurences of user input word in the sample statment.   
+lb $t2,($t0)           		# Load the starting address(character) of sample statement into $t2.
+lb $t3,($t1)           		# Load the starting address of user input word into $t3.
+                                  
+beq $t3,'\n',counter2
+beqz $t3,counter2       	# If $t3 is 0, exit loop, print output.
+beqz $t2,printOutput2       	# If $t2 is 0, exit loop, print output.
+                 
+move $a0,$t2           		# Convert $t2 to lower, if it is upper case.
+jal convert2Lower
+move $t2,$v0           		# Store the return($v0) value into $t2.
+
+move $a0,$t3           		# Convert $t3 to lower, if it is upper case.
+jal convert2Lower
+move $t3,$v0           		# Store the return($v0) value into $t3.
+
+bne $t2,$t3,nextChar2       	# If both characters do not current character in the string, go to next character otherwise, increment both.
+addiu $t0,$t0,1            
+addiu $t1,$t1,1
+j loop2               		# Jump to loop start
+nextChar2:
+la $t5,sWord
+bne $t5,$t1,search2
+la $t1,sWord           		# Store the input word into $t1.
+addiu $t0,$t0,1            	# Increment, to goto next character.
+j loop2               		# Jump to loop start.
+
+counter2:
+addi $t4,$t4,1           	# Increment the frequency counter by 1.
+la $t1,sWord           		# Store user input word into $t1.
+j loop2               		# Jump to loop start.
+
+printOutput2:
+   la $t0,sWord
+
+L2:
+lb $a0,($t0)
+beq $a0,'\n',exitL2
+jal convert2Upper
+move $a0,$v0
+li $v0,11
+syscall
+addiu $t0,$t0,1
+j L2
+
+exitL2:
+la $a0,colon
+li $v0,4
+syscall
+la $a0, hash2
+li $v0, 4
+syscall
+move $a0,$t4
+li $v0,1
+syscall
+
+exit:   			# Otherwise, end the program
+li $v0, 10             	
+syscall
+
+
+convert2Lower:                	# Converts a character(stored in $a0) to lower case and store the result in $v0
+move $v0,$a0
+blt $a0,'A',return
+bgt $a0,'Z',return
+subi $v0,$a0,-32
+
+return:   
+jr $ra               		# Return the converted lower case character
+
+convert2Upper:                	# Converts a character(stored in $a0) to upper case and store the result in $v0
+move $v0,$a0
+blt $a0,'a',return2
+bgt $a0,'z',return2
+addiu $v0,$a0,-32
+
+return2:   jr $ra               # Return the converted lower case character
+
